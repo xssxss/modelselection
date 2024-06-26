@@ -1,0 +1,26 @@
+Package: modelselection
+Title: Select variables for linear models
+Version: 0.0.0.9000
+Authors@R: 
+    person("Shuangshuang", "Xu", ,"xshuangshuang@vt.edu", role = c("aut", "cre"))
+Description: The 'modelselection' package can select variables for linear models. The 'modelselection' package uses BIC as a criterion.
+             The input is all candidate variables. The output is a list of two tables: the first table is about candidate models' BIC and posterior probabilities; 
+             the second table is about each candidate variables' posterior inclusion probability and whether this variable is selected or not. 
+License: GPL-3 + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports: 
+    stats (>= 4.2.2),
+    binaryLogic (>= 0.3.9),
+    GA (>= 3.2.3),
+    memoise (>= 2.0.1)
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+VignetteBuilder: knitr
+LazyData: true
+Depends: 
+    R (>= 3.5.0)
+Config/testthat/edition: 3

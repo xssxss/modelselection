@@ -1,0 +1,123 @@
+---
+title: "Model selection for linear models by BIC"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 3
+author: Allison Tegge, Shuangshuang Xu, Warren Bickel, and Marco A. R. Ferreira
+
+vignette: >
+  %\VignetteIndexEntry{Model selection for linear models by BIC}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(modelselection)
+```
+
+
+
+# Introduction
+
+The `Modelselection` package uses BIC to do model selection for linear models. The package provides the best model, and BIC and posterior probabilities for candidate models. This vignette contains an example to illustrate how `Modelselection` works. 
+
+
+# Function
+
+In the `Modelselection` package, there are two functions: `ModelSelect()` and `lm.best()`.
+
+* Function `ModelSelect()` uses BIC to do model selection for linear models. The function `ModelSelect()` takes formula and data containing response variable and predictors as input. It returns a list of two tables: 1. a table for candidate models with BIC and posterior probabilities; 2. a table for candidate variables with posterior inclusion probabilities and whether this variable is in the best model or not. In addition, it returns the original data (predictors and response).
+
+* Function `lm.best()` takes result from `ModelSelect()` as object. There are two methods to select the best model. `method="model"` uses models' BIC or posterior probabilities to select the best model. `method="variable"` selects the variables with posterior inclusion probabilities (PIP) larger than the `threshold`.
+
+# Model
+
+The linear models used in the `Modelselection` package is
+$$ \pmb{Y}=X\pmb{\beta}+ \pmb{\epsilon},$$
+where
+
+* $\pmb{Y}$ is a vector of observations.
+* $X$ is the matrix of covariates.
+* $\pmb{\beta}$ is the vector of regression coefficients.
+* $\pmb{\epsilon}$ is the vector of errors.
+
+# Example
+
+The `ModelSelect()` function can take a data frame which contains response and predictors. Here is the first 5 rows for the example data frame. X1-6 are six predictors, and Y is the response variable.
+
+```{r}
+data("dat")
+head(dat)
+```
+
+Data `dat` above are attached in the `Modelselection` package. 
+ 
+In this example, we use `ModelSelect` to select true variables for linear model. The `ModelSelect` can take formula and data as input. In the formula, `ModelSelect` can takes parts of variables in the data.
+```{r}
+example1 <- ModelSelect(formula = Y~X1+X2+X3+X4, data = dat)
+```
+
+The output of `ModelSelect` returns a table for models' BIC and posterior probabilites and a table for variables' PIP.
+```{r}
+head(example1$model)
+example1$variable
+```
+The `ModelSelect` also returns the response data and predictors.
+```{r}
+example1$response[1:10]
+example1$predictor[1:5,]
+```
+
+Here are two examples about how to write formula.
+```{r}
+example2 <- ModelSelect(formula = Y~., data = dat)
+example2$variable
+```
+
+```{r}
+example3 <- ModelSelect(formula = Y~X1+X2+X3+X4+X5+X6+X1:X2, data = dat)
+example3$variable
+```
+
+Then, use `lm.best` to fit the best model. The return is same as that from `lm`.
+```{r}
+lm_model <- lm.best(object = example1, method = "model", x = TRUE, y = TRUE)
+```
+
+```{r}
+lm_var <- lm.best(object = example2, method = "variable", threshold = 0.9)
+```
+
+`summary` can be applied to the result of `lm.best`
+
+```{r}
+summary(lm_model)
+```
+
+# Reference
+
+Tegge, Allison, Xu, Shuangshuang, Bickel, Warren, and Ferreira, M. A. R. (202X). paper, Journal, .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
